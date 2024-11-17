@@ -1,15 +1,20 @@
 package routers
 
 import (
+	"net/http"
+
 	"github.com/KarmaBeLike/doodocs_days/internal/handlers"
-	"github.com/gin-gonic/gin"
+	"github.com/KarmaBeLike/doodocs_days/internal/service"
 )
 
-func SetupRouters() *gin.Engine {
-	router := gin.Default()
+func SetupRouters() *http.ServeMux {
+	mux := http.NewServeMux()
 
-	router.POST("/archive/info", handlers.GetArchiveInfoHandler)
-	router.POST("/archive/files")
+	archiveService := &service.ArchiveService{}
+	archiveHandler := handlers.NewArchiveHandler(archiveService)
 
-	return router
+	mux.HandleFunc("/archive/info", archiveHandler.GetArchiveInfoHandler)
+	mux.HandleFunc("/archive/files", archiveHandler.CreateArchiveHandler)
+
+	return mux
 }

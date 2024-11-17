@@ -13,7 +13,7 @@ import (
 	"github.com/KarmaBeLike/doodocs_days/internal/errors"
 )
 
-func GetArchiveInfo(file io.Reader, header *multipart.FileHeader) (*entities.ArchiveInfo, error) {
+func (s *ArchiveService) GetArchiveInfo(file io.Reader, header *multipart.FileHeader) (*entities.ArchiveInfo, error) {
 	fileBytes, err := io.ReadAll(file)
 	if err != nil {
 		return nil, errors.ErrFileRead

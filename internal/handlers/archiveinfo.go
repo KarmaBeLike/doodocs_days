@@ -1,32 +1,40 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/KarmaBeLike/doodocs_days/internal/errors"
-	"github.com/KarmaBeLike/doodocs_days/internal/service"
-
-	"github.com/gin-gonic/gin"
 )
 
-func GetArchiveInfoHandler(c *gin.Context) {
-	file, header, err := c.Request.FormFile("file")
+func (h *ArchiveHandler) GetArchiveInfoHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		return
+	}
+
+	file, header, err := r.FormFile("file")
 	if err != nil {
-		apiErr := errors.ErrFileRead
-		c.JSON(apiErr.Code, gin.H{"error": apiErr.Message})
+		apiErr := errors.ErrInvalidFile
+		http.Error(w, apiErr.Message, apiErr.Code)
 		return
 	}
 	defer file.Close()
 
-	archiveInfo, err := service.GetArchiveInfo(file, header)
+	archiveInfo, err := h.archiveService.GetArchiveInfo(file, header)
 	if err != nil {
 		if archiveErr, ok := err.(*errors.ArchiveError); ok {
-			c.JSON(archiveErr.Code, gin.H{"error": archiveErr.Message})
+			http.Error(w, archiveErr.Message, archiveErr.Code)
 			return
 		}
 		apiErr := errors.ErrInternal
-		c.JSON(apiErr.Code, gin.H{"error": apiErr.Message})
+		http.Error(w, apiErr.Message, apiErr.Code)
 		return
 	}
-	c.JSON(http.StatusOK, archiveInfo)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(archiveInfo); err != nil {
+		http.Error(w, errors.ErrInternal.Message, errors.ErrInternal.Code)
+	}
 }
