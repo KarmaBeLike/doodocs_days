@@ -13,11 +13,18 @@ type ErrorResponse struct {
 
 // Предопределенные ошибки.
 var (
-	ErrFileRead    = New(http.StatusBadRequest, "Мы старались, но прочесть файл не удалось 📂🥲")
-	ErrNotArchive  = New(http.StatusBadRequest, "Мы ожидали .zip файл, но это что-то другое 📦🥲")
-	ErrInvalidMime = New(http.StatusUnsupportedMediaType, "Неверный тип файла 📄❌")
-	ErrInternal    = New(http.StatusInternalServerError, "Неизвестная ошибка 😞🥲")
-	ErrInvalidFile = New(http.StatusBadRequest, "Файл не загружен или поврежден 📂😭")
+	ErrFileRead          = New(http.StatusBadRequest, "Мы старались, но прочесть файл не удалось 📂🥲")
+	ErrNotArchive        = New(http.StatusBadRequest, "Мы ожидали .zip файл, но это что-то другое 📦🥲")
+	ErrInvalidMime       = New(http.StatusUnsupportedMediaType, "Неверный тип файла 📄❌")
+	ErrInternal          = New(http.StatusInternalServerError, "Неизвестная ошибка 😞🥲")
+	ErrInvalidFile       = New(http.StatusBadRequest, "Файл не загружен или поврежден 📂😭")
+	ErrFileOpenFailed    = New(http.StatusBadRequest, "Не удалось открыть файл 📂😞")
+	ErrZipCreation       = New(http.StatusInternalServerError, "Ошибка создания архива 📦❌")
+	ErrZipWriteFailed    = New(http.StatusInternalServerError, "Ошибка записи в архив 📦❌")
+	ErrZipCloseFailed    = New(http.StatusInternalServerError, "Ошибка закрытия архива 📦😞")
+	ErrFileSaveFailed    = New(http.StatusInternalServerError, "Ошибка сохранения файла 📂❌")
+	ErrSMTPConfigMissing = New(http.StatusInternalServerError, "Отсутствует SMTP-конфигурация 📧⚙️")
+	ErrEmailSendFailed   = New(http.StatusInternalServerError, "Ошибка отправки электронной почты 📤❌")
 )
 
 var (
