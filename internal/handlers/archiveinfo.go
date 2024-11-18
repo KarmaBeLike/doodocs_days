@@ -23,7 +23,7 @@ func (h *ArchiveHandler) GetArchiveInfoHandler(w http.ResponseWriter, r *http.Re
 
 	archiveInfo, err := h.archiveService.GetArchiveInfo(file, header)
 	if err != nil {
-		if archiveErr, ok := err.(*errors.ArchiveError); ok {
+		if archiveErr, ok := err.(*errors.ErrorResponse); ok {
 			http.Error(w, archiveErr.Message, archiveErr.Code)
 			return
 		}

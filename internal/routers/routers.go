@@ -15,6 +15,7 @@ func SetupRouters() *http.ServeMux {
 
 	mux.HandleFunc("/archive/info", archiveHandler.GetArchiveInfoHandler)
 	mux.HandleFunc("/archive/files", archiveHandler.CreateArchiveHandler)
+	mux.HandleFunc("/mail/file", archiveHandler.SendFileHandler)
 
 	return mux
 }
